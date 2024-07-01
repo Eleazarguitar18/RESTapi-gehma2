@@ -15,6 +15,8 @@ class FotoAfiliado extends Model
         'id_afiliado',
         'Foto',
     ];
+    public $timestamps = false;
+
     public function afiliadoFotoAfiliado()
     {
         return $this->belongsTo(Afiliado::class, 'id_afiliado');

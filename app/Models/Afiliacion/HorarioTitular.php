@@ -14,6 +14,8 @@ class HorarioTitular extends Model
         'id_horario',
         'descripcionHorario',
     ];
+    public $timestamps = false;
+
     public function institucionTitularHorarioTitular()
     {
         return $this->hasMany(InstitucionTitular::class, 'id_horario');

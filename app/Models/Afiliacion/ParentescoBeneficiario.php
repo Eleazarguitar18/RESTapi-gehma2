@@ -14,6 +14,7 @@ class ParentescoBeneficiario extends Model
         'id_parentesco',
         'DetalleParentesco',
     ];
+    public $timestamps = false;
 
     public function beneficiarioParentescoBeneficiario()
     {

@@ -14,6 +14,8 @@ class TipoAfiliado extends Model
         'id_tipoafiliado',
         'DetalleTipoAfiliado',
     ];
+    public $timestamps = false;
+
     public function afiliadoTipoAfiliado()
     {
         return $this->hasMany(Afiliado::class, 'id_tipoafiliado');

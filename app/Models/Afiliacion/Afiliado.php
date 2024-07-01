@@ -37,7 +37,7 @@ class Afiliado extends Model
         'id_zona',
         'domicilio',
         'telefonoDomicilio',
-        'telefonoCeluar',
+        'telefonoCelular',
         'fechaRegistro',
         'id_gruposanguineo',
         'alergias',
@@ -47,6 +47,8 @@ class Afiliado extends Model
         'id_estadoAfiliado',
         'idUsuario',
     ];
+    public $timestamps = false;
+
     public function departametoAfiliado()
     {
         return $this->belongsTo(Departamento::class, 'id_departamento');

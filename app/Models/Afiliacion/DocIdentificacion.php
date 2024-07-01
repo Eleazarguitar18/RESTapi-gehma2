@@ -15,6 +15,8 @@ class DocIdentificacion extends Model
         'TipoIdentificacion',
         'SiglaIdentificacion',
     ];
+    public $timestamps = false;
+
     public function afiliadoDocIdentificacion()
     {
         return $this->hasMany(Afiliado::class, 'id_tipoidentificacion');

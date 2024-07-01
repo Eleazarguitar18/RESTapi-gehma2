@@ -24,6 +24,8 @@ class Titular extends Model
         'idUsuario',
         'indefinido',
     ];
+    public $timestamps = false;
+
     public function institucionTitularTitular()
     {
         return $this->hasMany(InstitucionTitular::class, 'id_titular');

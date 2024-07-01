@@ -27,6 +27,8 @@ class InstitucionTitular extends Model
         'cargaActual',
         'oficina',
     ];
+    public $timestamps = false;
+
     public function areaInstitucionTitular()
     {
         return $this->belongsTo(AreaAfiliado::class, 'id_area');

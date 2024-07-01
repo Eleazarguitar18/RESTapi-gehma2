@@ -14,6 +14,8 @@ class Titularidad extends Model
         'id_titularidad',
         'nombreTitularidad',
     ];
+    public $timestamps = false;
+
     public function institucionTitularTitularidad()
     {
         return $this->hasMany(InstitucionTitular::class, 'id_titularidad');

@@ -14,6 +14,8 @@ class AreaAfiliado extends Model
         'id_area',
         'descripcionArea',
     ];
+    public $timestamps = false;
+
     public function institucionTitularArea()
     {
         return $this->hasMany(InstitucionTitular::class, 'id_area');

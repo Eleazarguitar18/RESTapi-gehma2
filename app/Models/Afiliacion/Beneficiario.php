@@ -21,6 +21,8 @@ class Beneficiario extends Model
         'estado_cambio',
         'idUsuario',
     ];
+    public $timestamps = false;
+
     public function parentescoBeneficiarioBeneficiario()
     {
         return $this->belongsTo(ParentescoBeneficiario::class, 'id_beneficiario');

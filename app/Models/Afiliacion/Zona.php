@@ -14,6 +14,8 @@ class Zona extends Model
         'id_zona',
         'descripcionZona',
     ];
+    public $timestamps = false;
+
     public function afiliadoZona()
     {
         return $this->hasMany(Afiliado::class, 'id_zona');

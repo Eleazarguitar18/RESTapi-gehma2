@@ -15,6 +15,8 @@ class EstadoCivil extends Model
         'nombreEstado',
         'codigoEstado',
     ];
+    public $timestamps = false;
+
     public function afiliadoEstadoCivil()
     {
         return $this->hasMany(Afiliado::class, 'id_estadocivil');

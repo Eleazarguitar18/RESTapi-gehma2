@@ -11,8 +11,7 @@ class AfiliadoController extends Controller
     //
     public function crearAfiliado(Request $request)
     {
-        $agregar = Afiliado::craete([
-            'id_afiliado' => $request->id_afiliado,
+        $data = Afiliado::create([
             'id_tipoafiliado' => $request->id_tipoafiliado,
             'matricula' => $request->matricula,
             'secuencial' => $request->secuencial,
@@ -40,5 +39,48 @@ class AfiliadoController extends Controller
             'id_estadoAfiliado' => $request->id_estadoAfiliado,
             'idUsuario' => $request->idUsuario,
         ]);
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fallo al crear Afiliado'
+            ], 500);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'afiliado creado satisfactoriamente',
+            'data' => $data
+        ], 201);
+    }
+    public function obtenerAfiliado($id)
+    {
+        $data = Afiliado::where('id_afiliado', $id)->first();
+        // $data = Afiliado::find($id);
+        // dd($data);
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'no se encontro el Afiliado'
+            ], 500);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Afiliado encontrado',
+            'data' => $data
+        ], 200);
+    }
+    public function listarAfiliado(Request $request)
+    {
+        $data = Afiliado::all();
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'no se encontro lista Afiliado'
+            ], 500);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'listado Afiliado',
+            'data' => $data
+        ], 200);
     }
 }

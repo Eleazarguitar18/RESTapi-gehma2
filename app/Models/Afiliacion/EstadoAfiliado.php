@@ -14,6 +14,8 @@ class EstadoAfiliado extends Model
         'id_estadoAfiliado',
         'DetalleTipoAfiliado',
     ];
+    public $timestamps = false;
+
     public function afiliadoEstadoAfiliado()
     {
         return $this->hasMany(Afiliado::class, 'id_estadoAfiliado');

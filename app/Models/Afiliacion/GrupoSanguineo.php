@@ -14,6 +14,8 @@ class GrupoSanguineo extends Model
         'id_gruposanguineo',
         'descripcionGrupoSanguineo',
     ];
+    public $timestamps = false;
+
     public function afiliadoGrupoSanguineo()
     {
         return $this->hasMany(Afiliado::class, 'id_gruposanguineo');

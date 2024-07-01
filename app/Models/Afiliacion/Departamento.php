@@ -20,4 +20,5 @@ class Departamento extends Model
     {
         return $this->hasMany(Afiliado::class, 'id_departamento');
     }
+    public $timestamps = false;
 }
