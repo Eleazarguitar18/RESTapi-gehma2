@@ -17,6 +17,7 @@ class TitularController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
+            'id_afiliado' => 'required',
             'fechaAfiliacion' => 'required|date',
             'nua' => 'required',
             'estadoRequisitos' => 'required',
@@ -25,10 +26,10 @@ class TitularController extends Controller
             'estado_cambio' => 'required',
             'estado_vigencia' => 'required',
             'matricula' => 'required',
-            'fecha_nacimiento' => 'required|date',
         ]);
         if ($validator->fails()) {
             $data = [
+                'success' => false,
                 'message' => 'Error en la validación de los datos',
                 'errors' => $validator->errors(),
                 'status' => 400
@@ -44,7 +45,7 @@ class TitularController extends Controller
             'observaciones' => $request->observaciones,
             'estado_cambio' => $request->estado_cambio,
             'estado_vigencia' => $request->estado_vigencia,
-            'idUsuario' => env('ID_USUARIO'),
+            'idUsuario' => 251,
             'indefinido' => $request->indefinido,
         ]);
         // dd($data);

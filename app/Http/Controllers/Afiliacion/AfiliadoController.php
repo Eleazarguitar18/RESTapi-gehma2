@@ -40,6 +40,7 @@ class AfiliadoController extends Controller
         ]);
         if ($validator->fails()) {
             $data = [
+                'success' => false,
                 'message' => 'Error en la validación de los datos',
                 'errors' => $validator->errors(),
                 'status' => 400
@@ -73,8 +74,9 @@ class AfiliadoController extends Controller
             'detallecontacto' => $request->detallecontacto,
             'observaciones' => $request->observaciones,
             'id_estadoAfiliado' => $request->id_estadoAfiliado,
-            'idUsuario' => env('ID_USUARIO'),
+            'idUsuario' => 251,
         ]);
+        // dd($data->id_afiliado);
         if (!$data) {
             return response()->json([
                 'success' => false,

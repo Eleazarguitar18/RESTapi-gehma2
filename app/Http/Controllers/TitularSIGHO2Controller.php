@@ -37,24 +37,32 @@ class TitularSIGHO2Controller extends Controller
     //
     public function crearTitularConSigho(Request $request)
     {
-
-
         $afiliado = new AfiliadoController();
         $titular = new TitularController();
         $datoAfiliado = $afiliado->crearAfiliado($request);
-        // dd($datoAfiliado->original);
-        $dataTitular = $titular->crearTitular($request);
-        // dd($titular->getAttributes());
+        // $request['id_afiliado'] = $id_afiliado;
+        // dd($datoAfiliado->original['success']);
+        if (!$datoAfiliado->original['success']) {
+            return response()->json([
+                'error' => 'No se pudo crear el afiliado',
+                'message' => $datoAfiliado->original,
+            ], $datoAfiliado->original['status']);
+        }
+        $id_afiliado = $datoAfiliado->original['data']->id;
+        $request['id_afiliado'] = $id_afiliado;
+        $datoTitular = $titular->crearTitular($request, $id_afiliado);
+        // dd($datoTitular->original);
         $data = [
             'afiliado' => $datoAfiliado->original,
-            'titular' => $dataTitular->original
+            'titular' => $datoTitular->original
         ];
 
-        if (!$data) {
+        if (!$data || !$datoTitular->original['success']) {
             return response()->json([
                 'success' => false,
-                'message' => 'Fallo al crear Titular'
-            ], 500);
+                'message' => 'Fallo al crear Titular',
+                'detalle' => $datoTitular->original,
+            ], $datoTitular->original['status']);
         }
         return response()->json([
             'success' => true,
