@@ -42,7 +42,7 @@ class TitularSIGHO2Controller extends Controller
         $afiliado = new AfiliadoController();
         $titular = new TitularController();
         $datoAfiliado = $afiliado->crearAfiliado($request);
-        dd($datoAfiliado->original);
+        // dd($datoAfiliado->original);
         $dataTitular = $titular->crearTitular($request);
         // dd($titular->getAttributes());
         $data = [
