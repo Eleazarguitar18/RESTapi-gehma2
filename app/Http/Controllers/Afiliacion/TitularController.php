@@ -8,12 +8,33 @@ use Illuminate\Http\Request;
 use App\Models\Afiliacion\Titular;
 use App\Models\Afiliacion\Afiliado;
 use App\Models\Afiliacion\FotoAfiliado;
+use Illuminate\Support\Facades\Validator;
 
 class TitularController extends Controller
 {
     //
     public function crearTitular(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'fechaAfiliacion' => 'required|date',
+            'nua' => 'required',
+            'estadoRequisitos' => 'required',
+            'fechaVencimiento' => 'required|date',
+            'observaciones' => 'required',
+            'estado_cambio' => 'required',
+            'estado_vigencia' => 'required',
+            'matricula' => 'required',
+            'fecha_nacimiento' => 'required|date',
+        ]);
+        if ($validator->fails()) {
+            $data = [
+                'message' => 'Error en la validación de los datos',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
         $data = Titular::create([
             'id_afiliado' => $request->id_afiliado,
             'fechaAfiliacion' => $request->fechaAfiliacion,
@@ -23,7 +44,7 @@ class TitularController extends Controller
             'observaciones' => $request->observaciones,
             'estado_cambio' => $request->estado_cambio,
             'estado_vigencia' => $request->estado_vigencia,
-            'idUsuario' => $request->idUsuario,
+            'idUsuario' => env('ID_USUARIO'),
             'indefinido' => $request->indefinido,
         ]);
         // dd($data);
