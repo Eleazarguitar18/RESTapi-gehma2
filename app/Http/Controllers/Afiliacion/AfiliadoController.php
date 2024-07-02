@@ -16,7 +16,6 @@ class AfiliadoController extends Controller
         $validator = Validator::make($request->all(), [
             'id_tipoafiliado' => 'required',
             'matricula' => 'required',
-            'secuencial' => 'required', //opcional
             'nombres' => 'required',
             'apellidoPaterno' => 'required',
             'apellidoMaterno' => 'required',
@@ -47,11 +46,18 @@ class AfiliadoController extends Controller
             ];
             return response()->json($data, 400);
         }
-
+        $existe = Afiliado::where('DocIdentificacion', $request->DocIdentificacion)->exists();
+        if ($existe) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El afiliado ya existe.',
+                'status' => 502
+            ], 502);
+        }
         $data = Afiliado::create([
             'id_tipoafiliado' => $request->id_tipoafiliado,
             'matricula' => $request->matricula,
-            'secuencial' => $request->secuenciala,
+            'secuencial' => 1,
             'nombres' => $request->nombres,
             'apellidoPaterno' => $request->apellidoPaterno,
             'apellidoMaterno' => $request->apellidoMaterno,
@@ -98,7 +104,7 @@ class AfiliadoController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'no se encontro el Afiliado'
-            ], 500);
+            ], 404);
         }
         return response()->json([
             'success' => true,

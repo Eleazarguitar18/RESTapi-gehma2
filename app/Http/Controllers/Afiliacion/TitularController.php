@@ -19,7 +19,6 @@ class TitularController extends Controller
         $validator = Validator::make($request->all(), [
             'id_afiliado' => 'required',
             'fechaAfiliacion' => 'required|date',
-            'nua' => 'required',
             'estadoRequisitos' => 'required',
             'fechaVencimiento' => 'required|date',
             'observaciones' => 'required',
@@ -35,6 +34,14 @@ class TitularController extends Controller
                 'status' => 400
             ];
             return response()->json($data, 400);
+        }
+        $existe = Titular::where('id_afiliado', $request->id_afiliado)->exists();
+        if ($existe) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El Titular ya existe.',
+                'status' => 502
+            ], 502);
         }
         $data = Titular::create([
             'id_afiliado' => $request->id_afiliado,
@@ -70,7 +77,7 @@ class TitularController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'no se encontro el Titular'
-            ], 500);
+            ], 404);
         }
         return response()->json([
             'success' => true,
