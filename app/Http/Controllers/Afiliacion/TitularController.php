@@ -43,12 +43,14 @@ class TitularController extends Controller
                 'status' => 502
             ], 502);
         }
+        $fechaAfiliacion1=new \DateTime($request->fechaAfiliacion);
+        $fechaVencimiento1=new \DateTime($request->fechaVencimiento);
         $data = Titular::create([
             'id_afiliado' => $request->id_afiliado,
-            'fechaAfiliacion' => $request->fechaAfiliacion,
+            'fechaAfiliacion' => $fechaAfiliacion1->format('d-m-Y'),
             'nua' => $request->nua,
             'estadoRequisitos' => $request->estadoRequisitos,
-            'fechaVencimiento' => $request->fechaVencimiento,
+            'fechaVencimiento' => $fechaVencimiento1->format('d-m-Y'),
             'observaciones' => $request->observaciones,
             'estado_cambio' => $request->estado_cambio,
             'estado_vigencia' => $request->estado_vigencia,

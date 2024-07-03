@@ -20,7 +20,7 @@ class AfiliadoController extends Controller
             'apellidoPaterno' => 'required',
             'apellidoMaterno' => 'required',
             //apellido esposo
-            'fechaNacimiento' => 'required|date_format:Y-m-d',
+            'fechaNacimiento' => 'required',
             'id_estadocivil' => 'required',
             'sexo' => 'required', // M o F
             'DocIdentificacion' => 'required',
@@ -29,12 +29,12 @@ class AfiliadoController extends Controller
             'domicilio' => 'required',
             'telefonoDomicilio' => 'required',
             'telefonoCelular' => 'required',
-            'fechaRegistro' => 'required|date_format:Y-m-d',
+            'fechaRegistro' => 'required',
             'id_gruposanguineo' => 'required',
             'alergias' => 'required',
             'telefonocontacto' => 'required',
             'detallecontacto' => 'required',
-            'observaciones' => 'required',
+            // 'observaciones' => 'required',
             'id_estadoAfiliado' => 'required',
         ]);
         if ($validator->fails()) {
