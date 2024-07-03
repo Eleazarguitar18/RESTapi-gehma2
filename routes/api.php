@@ -29,7 +29,7 @@ Route::get('/inicio', [InicioController::class, 'funcionInicio']);
 Route::get('/departamentos', [DepartamentoController::class, 'listarDepartamentos']);
 Route::get('/gruposanguineo', [GrupoSaguineoController::class, 'listarGrupoSanguineo']);
 
-Route::post('/departamento', [TitularSIGHO2Controller::class, 'crearTitularConSigho']);
+Route::get('/departamento', [TitularSIGHO2Controller::class, 'crearDepConSigho']);
 Route::post('/titularsigho', [TitularSIGHO2Controller::class, 'crearTitularConSigho']);
 // rutas crud de titutlar
 Route::get('/titular', [TitularController::class, 'listarTitular']);

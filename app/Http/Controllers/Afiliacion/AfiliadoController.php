@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Afiliacion\Afiliado;
 use Illuminate\Support\Facades\Validator;
-
+use Carbon\Carbon;
 
 class AfiliadoController extends Controller
 {
@@ -54,33 +54,63 @@ class AfiliadoController extends Controller
                 'status' => 502
             ], 502);
         }
+        // dd([
+        //     'id_tipoafiliado' => $request->id_tipoafiliado,
+        //     'fechaNacimiento' => Carbon::createFromFormat('Y-m-d',$request->fechaNacimiento),
+        //     'fechaRegistro' => Carbon::createFromFormat('Y-m-d',$request->fechaRegistro),
+        //     'matricula' => $request->matricula,
+        //     'secuencial' => 1,
+        //     'nombres' => $request->nombres,
+        //     'apellidoPaterno' => $request->apellidoPaterno,
+        //     'apellidoMaterno' => $request->apellidoMaterno,
+        //     'apellidoEsposo' => $request->apellidoEsposo,
+        //     'id_estadocivil' => $request->id_estadocivil,
+        //     'sexo' => $request->sexo,
+        //     'id_tipoidentificacion' => 1,
+        //     'DocIdentificacion' => $request->DocIdentificacion,
+        //     'id_departamento' => $request->id_departamento,
+        //     'id_departamentonac' => $request->id_departamentonac,
+        //     'id_zona' => 16,
+        //     'domicilio' => $request->domicilio,
+        //     'telefonoDomicilio' => $request->telefonoDomicilio,
+        //     'telefonoCelular' => $request->telefonoCeluar,
+        //     'id_gruposanguineo' => $request->id_gruposanguineo,
+        //     'alergias' => $request->alergias,
+        //     'telefonocontacto' => $request->telefonocontacto,
+        //     'detallecontacto' => $request->detallecontacto,
+        //     'observaciones' => $request->observaciones,
+        //     'id_estadoAfiliado' => $request->id_estadoAfiliado,
+        //     'idUsuario' => 4,
+        // ]);
+        $fechaNacimeinto1=new \DateTime($request->fechaNacimiento);
+        $fechaRegistro2=new \DateTime($request->fechaRegistro);
         $data = Afiliado::create([
-            'id_tipoafiliado' => trim($request->id_tipoafiliado),
-            'matricula' => trim($request->matricula),
+            'id_tipoafiliado' => "1",
+            'fechaNacimiento' =>$fechaNacimeinto1->format('d-m-Y'),
+            'fechaRegistro' =>$fechaRegistro2->format('d-m-Y'),
+            'matricula' => $request->matricula,
             'secuencial' => 1,
-            'nombres' => trim($request->nombres),
-            'apellidoPaterno' => trim($request->apellidoPaterno),
-            'apellidoMaterno' => trim($request->apellidoMaterno),
-            'apellidoEsposo' => trim($request->apellidoEsposo),
-            'fechaNacimiento' => trim($request->fechaNacimiento),
-            'id_estadocivil' => trim($request->id_estadocivil),
-            'sexo' => trim($request->sexo),
+            'nombres' => $request->nombres,
+            'apellidoPaterno' => $request->apellidoPaterno,
+            'apellidoMaterno' => $request->apellidoMaterno,
+            'apellidoEsposo' => $request->apellidoEsposo,
+            'id_estadocivil' => $request->id_estadocivil,
+            'sexo' => $request->sexo,
             'id_tipoidentificacion' => 1,
-            'DocIdentificacion' => trim($request->DocIdentificacion),
-            'id_departamento' => trim($request->id_departamento),
-            'id_departamentonac' => trim($request->id_departamentonac),
+            'DocIdentificacion' => $request->DocIdentificacion,
+            'id_departamento' => $request->id_departamento,
+            'id_departamentonac' => $request->id_departamentonac,
             'id_zona' => 16,
-            'domicilio' => trim($request->domicilio),
-            'telefonoDomicilio' => trim($request->telefonoDomicilio),
-            'telefonoCelular' => trim($request->telefonoCeluar),
-            'fechaRegistro' => trim($request->fechaRegistro),
-            'id_gruposanguineo' => trim($request->id_gruposanguineo),
-            'alergias' => trim($request->alergias),
-            'telefonocontacto' => trim($request->telefonocontacto),
-            'detallecontacto' => trim($request->detallecontacto),
-            'observaciones' => trim($request->observaciones),
-            'id_estadoAfiliado' => trim($request->id_estadoAfiliado),
-            'idUsuario' => 251,
+            'domicilio' => $request->domicilio,
+            'telefonoDomicilio' => $request->telefonoDomicilio,
+            'telefonoCelular' => $request->telefonoCeluar,
+            'id_gruposanguineo' => $request->id_gruposanguineo,
+            'alergias' => $request->alergias,
+            'telefonocontacto' => $request->telefonocontacto,
+            'detallecontacto' => $request->detallecontacto,
+            'observaciones' => $request->observaciones,
+            'id_estadoAfiliado' => $request->id_estadoAfiliado,
+            'idUsuario' => 4,
         ]);
         // dd($data->id_afiliado);
         if (!$data) {
