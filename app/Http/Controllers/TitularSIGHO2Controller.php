@@ -8,7 +8,6 @@ use App\Http\Controllers\Afiliacion\AfiliadoController;
 use App\Http\Controllers\Afiliacion\DepartamentoController;
 use App\Models\Afiliacion\Afiliado;
 use App\Models\Afiliacion\FotoAfiliado;
-use DB;
 /* 
 NUEVA BASE				ANTIGUA BASE
 
@@ -38,9 +37,12 @@ class TitularSIGHO2Controller extends Controller
     //
     public function crearTitularConSigho(Request $request)
     {
-        $afiliado = new AfiliadoController();
+        try {
+            $afiliado = new AfiliadoController();
         $titular = new TitularController();
         $datoAfiliado = $afiliado->crearAfiliado($request);
+        
+        //dd($datoAfiliado);
         // $request['id_afiliado'] = $id_afiliado;
         // dd($datoAfiliado->original['success']);
         if (!$datoAfiliado->original['success']) {
@@ -70,42 +72,14 @@ class TitularSIGHO2Controller extends Controller
             'message' => 'Titular creado satisfactoriamente',
             'data' => $data
         ], 201);
-    }
-    public function crearDepConSigho(Request $request)
-    {
-        DB::table('tbl_afiliacion_departamento')->insert([
-            'departamento' => 'value1',
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el titular afiliado atravez del sistema SighoV2',
+                'data' => $th
+            ], 500);
+        }
 
-            // Añade más columnas y valores según sea necesario
-        ]);
-        $data = Afiliado::create([
-            'id_tipoafiliado' => "1",
-            'fechaNacimiento' =>'2000-01-25',
-            'fechaRegistro' =>'2000-01-25',
-            'matricula' => '0015441ams',
-            'secuencial' => 1,
-            'nombres' => "asd",
-            'apellidoPaterno' => "asd",
-            'apellidoMaterno' => "asd",
-            'apellidoEsposo' => "asd",
-            'id_estadocivil' => 1,
-            'sexo' => 'F',
-            'id_tipoidentificacion' => 1,
-            'DocIdentificacion' => '11111110',
-            'id_departamento' => 1,
-            'id_departamentonac' => 1,
-            'id_zona' => 16,
-            'domicilio' => "asdasdasd",
-            'telefonoDomicilio' => "asdasd",
-            'telefonoCelular' => "asd",
-            'id_gruposanguineo' => 1,
-            'alergias' => "asd",
-            'telefonocontacto' => "asd",
-            'detallecontacto' => "asd",
-            'observaciones' => "asd",
-            'id_estadoAfiliado' => 1,
-            'idUsuario' => 4,
-        ]);
-        dd("se hizo");
+        
     }
 }

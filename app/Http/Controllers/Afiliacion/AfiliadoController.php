@@ -10,10 +10,10 @@ use Carbon\Carbon;
 
 class AfiliadoController extends Controller
 {
-    //
     public function crearAfiliado(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        try {
+            $validator = Validator::make($request->all(), [
             'id_tipoafiliado' => 'required',
             'matricula' => 'required',
             'nombres' => 'required',
@@ -31,99 +31,97 @@ class AfiliadoController extends Controller
             'telefonoCelular' => 'required',
             'fechaRegistro' => 'required',
             'id_gruposanguineo' => 'required',
-            'alergias' => 'required',
             'telefonocontacto' => 'required',
             'detallecontacto' => 'required',
             // 'observaciones' => 'required',
             'id_estadoAfiliado' => 'required',
+            //'id_afiliado' => 'required',
+            // 'fechaAfiliacion' => 'required|date',
+            // 'estadoRequisitos' => 'required',
+            // 'fechaVencimiento' => 'required|date',
+            // 'observaciones' => 'required',
+            // 'estado_cambio' => 'required',
+            // 'estado_vigencia' => 'required'
         ]);
         if ($validator->fails()) {
             $data = [
                 'success' => false,
                 'message' => 'Error en la validación de los datos',
                 'errors' => $validator->errors(),
-                'status' => 400
+                'status' => 400,
             ];
+            
             return response()->json($data, 400);
         }
-        $existe = Afiliado::where('DocIdentificacion', $request->DocIdentificacion)->exists();
+        $existe = Afiliado::where('DocIdentificacion', $request->DocIdentificacion)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
+        //dd($existe);
         if ($existe) {
-            return response()->json([
-                'success' => false,
-                'message' => 'El afiliado ya existe.',
-                'status' => 502
-            ], 502);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'El afiliado ya existe.',
+                    'status' => 502,
+                ],
+                502,
+            );
+        } else {
+            $fechaNacimeinto1 = new \DateTime($request->fechaNacimiento);
+            $fechaRegistro2 = new \DateTime($request->fechaRegistro);
+            $data = Afiliado::create([
+                'id_tipoafiliado' => $request->id_tipoafiliado,
+                'fechaNacimiento' => $fechaNacimeinto1->format('d-m-Y'),
+                'fechaRegistro' => $fechaRegistro2->format('d-m-Y'),
+                'matricula' => $request->matricula,
+                'secuencial' => $request->secuencial,
+                'nombres' => $request->nombres,
+                'apellidoPaterno' => $request->apellidoPaterno,
+                'apellidoMaterno' => $request->apellidoMaterno,
+                'apellidoEsposo' => $request->apellidoEsposo,
+                'id_estadocivil' => $request->id_estadocivil,
+                'sexo' => $request->sexo,
+                'id_tipoidentificacion' => 1,
+                'DocIdentificacion' => $request->DocIdentificacion,
+                'id_departamento' => $request->id_departamento,
+                'id_departamentonac' => $request->id_departamentonac,
+                'id_zona' => 16,
+                'domicilio' => $request->domicilio,
+                'telefonoDomicilio' => $request->telefonoDomicilio,
+                'telefonoCelular' => $request->telefonoCeluar,
+                'id_gruposanguineo' => $request->id_gruposanguineo,
+                'alergias' => $request->alergias,
+                'telefonocontacto' => $request->telefonocontacto,
+                'detallecontacto' => $request->detallecontacto,
+                'observaciones' => $request->observaciones,
+                'id_estadoAfiliado' => $request->id_estadoAfiliado,
+                'idUsuario' => $request->idUsuario,
+            ]);
+
+            if (!$data) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Fallo al crear Afiliado',
+                    ],
+                    500,
+                );
+            } else {
+                return response()->json(
+                    [
+                        'success' => true,
+                        'message' => 'afiliado creado satisfactoriamente',
+                        'data' => $data,
+                    ],
+                    201,
+                );
+            }
         }
-        // dd([
-        //     'id_tipoafiliado' => $request->id_tipoafiliado,
-        //     'fechaNacimiento' => Carbon::createFromFormat('Y-m-d',$request->fechaNacimiento),
-        //     'fechaRegistro' => Carbon::createFromFormat('Y-m-d',$request->fechaRegistro),
-        //     'matricula' => $request->matricula,
-        //     'secuencial' => 1,
-        //     'nombres' => $request->nombres,
-        //     'apellidoPaterno' => $request->apellidoPaterno,
-        //     'apellidoMaterno' => $request->apellidoMaterno,
-        //     'apellidoEsposo' => $request->apellidoEsposo,
-        //     'id_estadocivil' => $request->id_estadocivil,
-        //     'sexo' => $request->sexo,
-        //     'id_tipoidentificacion' => 1,
-        //     'DocIdentificacion' => $request->DocIdentificacion,
-        //     'id_departamento' => $request->id_departamento,
-        //     'id_departamentonac' => $request->id_departamentonac,
-        //     'id_zona' => 16,
-        //     'domicilio' => $request->domicilio,
-        //     'telefonoDomicilio' => $request->telefonoDomicilio,
-        //     'telefonoCelular' => $request->telefonoCeluar,
-        //     'id_gruposanguineo' => $request->id_gruposanguineo,
-        //     'alergias' => $request->alergias,
-        //     'telefonocontacto' => $request->telefonocontacto,
-        //     'detallecontacto' => $request->detallecontacto,
-        //     'observaciones' => $request->observaciones,
-        //     'id_estadoAfiliado' => $request->id_estadoAfiliado,
-        //     'idUsuario' => 4,
-        // ]);
-        $fechaNacimeinto1=new \DateTime($request->fechaNacimiento);
-        $fechaRegistro2=new \DateTime($request->fechaRegistro);
-        $data = Afiliado::create([
-            'id_tipoafiliado' => "1",
-            'fechaNacimiento' =>$fechaNacimeinto1->format('d-m-Y'),
-            'fechaRegistro' =>$fechaRegistro2->format('d-m-Y'),
-            'matricula' => $request->matricula,
-            'secuencial' => 1,
-            'nombres' => $request->nombres,
-            'apellidoPaterno' => $request->apellidoPaterno,
-            'apellidoMaterno' => $request->apellidoMaterno,
-            'apellidoEsposo' => $request->apellidoEsposo,
-            'id_estadocivil' => $request->id_estadocivil,
-            'sexo' => $request->sexo,
-            'id_tipoidentificacion' => 1,
-            'DocIdentificacion' => $request->DocIdentificacion,
-            'id_departamento' => $request->id_departamento,
-            'id_departamentonac' => $request->id_departamentonac,
-            'id_zona' => 16,
-            'domicilio' => $request->domicilio,
-            'telefonoDomicilio' => $request->telefonoDomicilio,
-            'telefonoCelular' => $request->telefonoCeluar,
-            'id_gruposanguineo' => $request->id_gruposanguineo,
-            'alergias' => $request->alergias,
-            'telefonocontacto' => $request->telefonocontacto,
-            'detallecontacto' => $request->detallecontacto,
-            'observaciones' => $request->observaciones,
-            'id_estadoAfiliado' => $request->id_estadoAfiliado,
-            'idUsuario' => 4,
-        ]);
-        // dd($data->id_afiliado);
-        if (!$data) {
+        } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => 'Fallo al crear Afiliado'
+                'message' => 'Error al crear el afiliado',
+                'data' => $th
             ], 500);
         }
-        return response()->json([
-            'success' => true,
-            'message' => 'afiliado creado satisfactoriamente',
-            'data' => $data
-        ], 201);
     }
     public function obtenerAfiliado($id)
     {
@@ -131,30 +129,42 @@ class AfiliadoController extends Controller
         // $data = Afiliado::find($id);
         // dd($data);
         if (!$data) {
-            return response()->json([
-                'success' => false,
-                'message' => 'no se encontro el Afiliado'
-            ], 404);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'no se encontro el Afiliado',
+                ],
+                404,
+            );
         }
-        return response()->json([
-            'success' => true,
-            'message' => 'Afiliado encontrado',
-            'data' => $data
-        ], 200);
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Afiliado encontrado',
+                'data' => $data,
+            ],
+            200,
+        );
     }
     public function listarAfiliado(Request $request)
     {
         $data = Afiliado::all();
         if (!$data) {
-            return response()->json([
-                'success' => false,
-                'message' => 'no se encontro lista Afiliado'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'no se encontro lista Afiliado',
+                ],
+                500,
+            );
         }
-        return response()->json([
-            'success' => true,
-            'message' => 'listado Afiliado',
-            'data' => $data
-        ], 200);
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'listado Afiliado',
+                'data' => $data,
+            ],
+            200,
+        );
     }
 }

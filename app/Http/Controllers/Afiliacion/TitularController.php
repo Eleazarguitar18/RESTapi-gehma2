@@ -15,12 +15,13 @@ class TitularController extends Controller
     //
     public function crearTitular(Request $request)
     {
-
+        try {
+            
         $validator = Validator::make($request->all(), [
             'id_afiliado' => 'required',
-            'fechaAfiliacion' => 'required|date',
+            'fechaAfiliacion' => 'required',
             'estadoRequisitos' => 'required',
-            'fechaVencimiento' => 'required|date',
+            'fechaVencimiento' => 'required',
             'observaciones' => 'required',
             'estado_cambio' => 'required',
             'estado_vigencia' => 'required',
@@ -47,10 +48,10 @@ class TitularController extends Controller
         $fechaVencimiento1=new \DateTime($request->fechaVencimiento);
         $data = Titular::create([
             'id_afiliado' => $request->id_afiliado,
-            'fechaAfiliacion' => $fechaAfiliacion1->format('d-m-Y'),
+            'fechaAfiliacion' => $request->fechaAfiliacion1->format('d-m-Y'),
             'nua' => $request->nua,
             'estadoRequisitos' => $request->estadoRequisitos,
-            'fechaVencimiento' => $fechaVencimiento1->format('d-m-Y'),
+            'fechaVencimiento' => $request->fechaVencimiento1->format('d-m-Y'),
             'observaciones' => $request->observaciones,
             'estado_cambio' => $request->estado_cambio,
             'estado_vigencia' => $request->estado_vigencia,
@@ -69,6 +70,13 @@ class TitularController extends Controller
             'message' => 'Titular creado satisfactoriamente',
             'data' => $data
         ], 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el Titular',
+                'data' => $th
+            ], 500);
+        }
     }
     public function obtenerTitular($id)
     {
