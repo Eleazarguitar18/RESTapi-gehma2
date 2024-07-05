@@ -75,7 +75,7 @@ class AfiliadoController extends Controller
                 'fechaNacimiento' => $fechaNacimeinto1->format('d-m-Y'),
                 'fechaRegistro' => $fechaRegistro2->format('d-m-Y'),
                 'matricula' => $request->matricula,
-                'secuencial' => $request->secuencial,
+                'secuencial' => 1,
                 'nombres' => $request->nombres,
                 'apellidoPaterno' => $request->apellidoPaterno,
                 'apellidoMaterno' => $request->apellidoMaterno,

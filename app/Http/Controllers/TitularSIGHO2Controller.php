@@ -41,6 +41,7 @@ class TitularSIGHO2Controller extends Controller
         //dd($request->all());    
         $datoError="Error";
         try {
+        $request['id_tipoafiliado']=2;
             
         // dd($request->request);
         $afiliado = new AfiliadoController();
@@ -62,15 +63,11 @@ class TitularSIGHO2Controller extends Controller
         $request['id_afiliado'] = $id_afiliado;
         $titular = new TitularController();
         $datoTitular = $titular->crearTitular($request);
+        // return $datoTitular;
         $migracion = new MigracionController();
         $datoMigracion = $migracion->agregarMigracion($request);
-        $data = [
-            'afiliado' => $datoAfiliado->original,
-            'titular' => $datoTitular->original,
-            'migracion' => $datoMigracion->original
-        ];
         // dd($data);
-
+        
         if (!$datoTitular->original['success']) {
             $datoError=$datoAfiliado;
             return response()->json([
@@ -79,6 +76,11 @@ class TitularSIGHO2Controller extends Controller
                 'detalle' => $datoTitular->original,
             ], $datoTitular->original['status']);
         }
+        $data = [
+            'afiliado' => $datoAfiliado->original,
+            'titular' => $datoTitular->original,
+            'migracion' => $datoMigracion->original
+        ];
         return response()->json([
             'success' => true,
             'message' => 'Titular creado satisfactoriamente',

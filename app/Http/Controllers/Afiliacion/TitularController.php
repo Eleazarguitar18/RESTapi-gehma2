@@ -10,7 +10,7 @@ use App\Models\Afiliacion\Migracion;
 use App\Models\Afiliacion\Afiliado;
 use App\Models\Afiliacion\FotoAfiliado;
 use Illuminate\Support\Facades\Validator;
-
+use Carbon\Carbon;
 class TitularController extends Controller
 {
     //
@@ -18,14 +18,14 @@ class TitularController extends Controller
     {
         //dd($request->all());
         try {
-            $request['id_tipoafiliado']=2;
+            // $request['id_tipoafiliado']=2;
+            // return $request->all();
             $validator = Validator::make($request->all(), [
                 'id_afiliado' => 'required',
                 'fechaAfiliacion' => 'required',
                 // 'fechaVencimiento' => 'required',
                 // 'observaciones' => 'required',
-                'estado_cambio' => 'required',
-                'estado_vigencia' => 'required',
+                // 'estado_vigencia' => 'required',
                 'matricula' => 'required',
             ]);
             if ($validator->fails()) {
@@ -37,7 +37,7 @@ class TitularController extends Controller
                 ];
                 return response()->json($data, 400);
             }
-            $existe = Titular::where('id_afiliado', '=', $request->id_afiliado)->exists();
+            $existe = Titular::where('id_afiliado', '=', $request->id_afiliado)->first();
             if ($existe) {
                 return response()->json(
                     [
@@ -48,10 +48,9 @@ class TitularController extends Controller
                     502,
                 );
             }
-            $fechaAfiliacion1 = new \DateTime($request->fechaAfiliacion);
-            $fechaVencimiento1 = new \DateTime($request->fechaVencimiento);
+            
             $data = Titular::create([
-                'id_afiliado' => 2,
+                'id_afiliado' => $request->id_afiliado,
                 'fechaAfiliacion'=>Carbon::parse($request->fechaAfiliacion)->format('d-m-Y'),
                 'nua' => $request->nua,
                 'estadoRequisitos' => 0,
