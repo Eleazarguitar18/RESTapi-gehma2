@@ -26,7 +26,6 @@ class TitularController extends Controller
                 // 'fechaVencimiento' => 'required',
                 // 'observaciones' => 'required',
                 // 'estado_vigencia' => 'required',
-                'matricula' => 'required',
             ]);
             if ($validator->fails()) {
                 $data = [
@@ -38,14 +37,29 @@ class TitularController extends Controller
                 return response()->json($data, 400);
             }
             $existe = Titular::where('id_afiliado', '=', $request->id_afiliado)->first();
+            
             if ($existe) {
+                Titular::where('id_afiliado', '=',$request->id_afiliado)->update([
+                    'fechaAfiliacion'=>Carbon::parse($request->fechaAfiliacion)->format('d-m-Y'),
+                    'nua' => $request->nua,
+                    'estadoRequisitos' => 0,
+                    // 'fechaVencimiento' => $fechaVencimiento1->format('d-m-Y'),
+                    'observaciones' => $request->observaciones,
+                    'estado_cambio' => 0,
+                    'estado_vigencia' => 1,
+                    'idUsuario' => 251,
+                    'indefinido' => 0,
+                ]);
+            $actualizado = Titular::where('id_afiliado', '=', $request->id_afiliado)->first();
+
                 return response()->json(
                     [
-                        'success' => false,
-                        'message' => 'El Titular ya existe.',
-                        'status' => 502,
+                        'success' => true,
+                        'message' => 'El Titular ya existe y se actualizo',
+                        'status' => 200,
+                        'data'=>$actualizado
                     ],
-                    502,
+                    200,
                 );
             }
             

@@ -60,14 +60,19 @@ class TitularSIGHO2Controller extends Controller
         
         $id_afiliado = $datoAfiliado->original['data']->id;
         // $migracion->agregarMigracion($id_afiliado);
-        $request['id_afiliado'] = $id_afiliado;
+        $request['id_afiliado'] = (int)$id_afiliado;
         $titular = new TitularController();
         $datoTitular = $titular->crearTitular($request);
         // return $datoTitular;
         $migracion = new MigracionController();
         $datoMigracion = $migracion->agregarMigracion($request);
         // dd($data);
-        
+        // return $datoMigracion;
+        $data = [
+            'afiliado' => $datoAfiliado->original,
+            'titular' => $datoTitular->original,
+            'migracion' => $datoMigracion->original
+        ];
         if (!$datoTitular->original['success']) {
             $datoError=$datoAfiliado;
             return response()->json([
@@ -76,11 +81,7 @@ class TitularSIGHO2Controller extends Controller
                 'detalle' => $datoTitular->original,
             ], $datoTitular->original['status']);
         }
-        $data = [
-            'afiliado' => $datoAfiliado->original,
-            'titular' => $datoTitular->original,
-            'migracion' => $datoMigracion->original
-        ];
+        
         return response()->json([
             'success' => true,
             'message' => 'Titular creado satisfactoriamente',
@@ -95,7 +96,7 @@ class TitularSIGHO2Controller extends Controller
                 'error' => $th->getMessage(), //Mensaje del error
                 'line' => $th->getLine(),     // Línea donde ocurrió el error
                 'file' => $th->getFile(),     // Archivo donde ocurrió el error
-                'data' => $datoError->original
+                'data' => $datoError
             ], 500);
         }
     }

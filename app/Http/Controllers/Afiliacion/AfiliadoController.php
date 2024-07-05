@@ -19,8 +19,8 @@ class AfiliadoController extends Controller
             // 'id_tipoafiliado' => 'required',
             'matricula' => 'required',
             'nombres' => 'required',
-            'apellidoPaterno' => 'required',
-            'apellidoMaterno' => 'required',
+            //'apellidoPaterno' => 'required',
+            //'apellidoMaterno' => 'required',
             //apellido esposo
             'fechaNacimiento' => 'required',
             'id_estadocivil' => 'required',
@@ -58,22 +58,63 @@ class AfiliadoController extends Controller
         $existe = Afiliado::where('DocIdentificacion','like', $request->DocIdentificacion)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
         //dd($request->DocIdentificacion);
         if ($existe) {
+            // Actualizar afiliado
+            Afiliado::where('DocIdentificacion', 'like',$request->DocIdentificacion)->update([
+                'id_tipoafiliado' => $request->id_tipoafiliado,
+                'fechaNacimiento' => Carbon::parse($request->fechaNacimeinto)->format('d-m-Y'),
+                'fechaRegistro' => Carbon::parse($request->fechaRegistro)->format('d-m-Y'),
+                'matricula' => $request->matricula,
+                'secuencial' => 1,
+                'nombres' => $request->nombres,
+                'apellidoPaterno' => $request->apellidoPaterno,
+                'apellidoMaterno' => $request->apellidoMaterno,
+                'apellidoEsposo' => $request->apellidoEsposo,
+                'id_estadocivil' => $request->id_estadocivil,
+                'sexo' => $request->sexo,
+                'id_tipoidentificacion' => 1,
+                // 'DocIdentificacion' => $request->DocIdentificacion,
+                'id_departamento' => $request->id_departamento,
+                'id_departamentonac' => $request->id_departamentonac,
+                'id_zona' => 16,
+                'domicilio' => $request->domicilio,
+                'telefonoDomicilio' => $request->telefonoDomicilio,
+                'telefonoCelular' => $request->telefonoCeluar,
+                'id_gruposanguineo' => 9,
+                'alergias' => $request->alergias,
+                'telefonocontacto' => $request->telefonocontacto,
+                'detallecontacto' => $request->detallecontacto,
+                'observaciones' => $request->observaciones,
+                'id_estadoAfiliado' => 1,
+                'idUsuario' => 251,
+            ]);
+        $actualizado = Afiliado::where('DocIdentificacion','like', $request->DocIdentificacion)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
+            // dd($actualizado);
+            if (!$actualizado) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Fallo al actualizar Afiliado',
+                        'data' => $actualizado,
+                    ],
+                    500,
+                );
+            }
             return response()->json(
                 [
-                    'success' => false,
-                    'message' => 'El afiliado ya existe.',
-                    'status' => 502,
+                    'success' => true,
+                    'message' => 'El afiliado ya existe datos actualizados.',
+                    'status' => 201,
+                    'data'=>$actualizado
                 ],
                 502,
             );
-        } 
+        
+    }
         else {
-            $fechaNacimeinto1 = new \DateTime($request->fechaNacimiento);
-            $fechaRegistro2 = new \DateTime($request->fechaRegistro);
             $data = Afiliado::create([
                 'id_tipoafiliado' => $request->id_tipoafiliado,
-                'fechaNacimiento' => $fechaNacimeinto1->format('d-m-Y'),
-                'fechaRegistro' => $fechaRegistro2->format('d-m-Y'),
+                'fechaNacimiento' => Carbon::parse($request->fechaNacimeinto)->format('d-m-Y'),
+                'fechaRegistro' => Carbon::parse($request->fechaRegistro)->format('d-m-Y'),
                 'matricula' => $request->matricula,
                 'secuencial' => 1,
                 'nombres' => $request->nombres,

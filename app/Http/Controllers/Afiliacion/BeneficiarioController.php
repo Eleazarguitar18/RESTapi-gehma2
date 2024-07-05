@@ -11,6 +11,7 @@ class BeneficiarioController extends Controller
 {
     public function crearBeneficiario(Request $request)
     {
+        // dd($request->all());
         try {
             $validator = Validator::make($request->all(), [
             //'id_beneficiario' => 'required',
@@ -34,18 +35,32 @@ class BeneficiarioController extends Controller
             
             return response()->json($data, 400);
         }
-        $existe = Beneficiario::where('id_afiliado','=', $request->id_afiliado)->exists(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
+        
+        $existe = Beneficiario::where('id_afiliado','=', $request->id_afiliado)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
         //dd($existe);
-        if ($existe) {
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => 'El Beneficiario ya existe.',
-                    'status' => 502,
-                ],
-                502,
-            );
-        } else {
+            if ($existe) {
+                Beneficiario::where('id_afiliado', '=',$request->id_afiliado)->update([
+                    'id_titular'=>$request->id_titular,
+                    'id_parentesco'=>$request->id_parentesco,
+                    'fechaAfiliacion'=>Carbon::parse($request->fechaAfiliacion)->format('d-m-Y'),//
+                    'estadoRequisitos'=>0,
+                    'observaciones'=>$request->observaciones,
+                    // 'fechaVencimiento'=>null,
+                    'estado_cambio'=>0,
+                    'idUsuario'=>251,
+                ]);
+            $actualizado = Beneficiario::where('id_afiliado','=', $request->id_afiliado)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
+            
+                return response()->json(
+                    [
+                        'success' => true,
+                        'message' => 'El Beneficiario ya existe y se actualizo',
+                        'status' => 200,
+                        'data'=>$actualizado
+                    ],
+                    200,
+                );
+            } else {
             $data = Beneficiario::create([
                 'id_afiliado'=>$request->id_afiliado,
                 'id_titular'=>$request->id_titular,

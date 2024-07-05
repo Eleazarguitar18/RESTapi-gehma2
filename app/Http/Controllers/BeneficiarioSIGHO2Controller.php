@@ -45,21 +45,21 @@ class BeneficiarioSIGHO2Controller extends Controller
         
         // return $Afiliado_titular->original['data']->id_afiliado;
         $request['id_titular']=(int)$Afiliado_titular->original['data']->id_afiliado;
-
-        $id_afiliado = $datoAfiliado->original['data']->id;
+        // dd((int)$Afiliado_titular->original['data']->id_afiliado);
+        $id_afiliado = $datoAfiliado->original['data']->id_afiliado;
         $request['id_afiliado'] = $id_afiliado;
-        // dd($request->all());
         $beneficiario = new BeneficiarioController();
         $datoBeneficiario = $beneficiario->crearBeneficiario($request);
         $migracion = new MigracionController();
         $datoMigracion = $migracion->agregarMigracion($request);
         // dd($datoBeneficiario);
+        
         $data = [
             'afiliado' => $datoAfiliado->original,
-            'beneficiario' => $datoBeneficiario->original
+            'beneficiario' => $datoBeneficiario->original,
+            'migracion'=> $datoMigracion->original
         ];
-
-        if (!$data || !$datoBeneficiario->original['success']) {
+        if (!$datoBeneficiario->original['success']) {
             return response()->json([
                 'success' => false,
                 'message' => 'Fallo al crear Beneficiario',
@@ -78,7 +78,7 @@ class BeneficiarioSIGHO2Controller extends Controller
                 'error' => $th->getMessage(), //Mensaje del error
                 'line' => $th->getLine(),     // Línea donde ocurrió el error
                 'file' => $th->getFile(),     // Archivo donde ocurrió el error
-                'data' => $datoError->original
+                'data' => $datoError
             ], 500);
         }
 
