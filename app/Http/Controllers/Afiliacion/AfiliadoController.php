@@ -12,9 +12,11 @@ class AfiliadoController extends Controller
 {
     public function crearAfiliado(Request $request)
     {
+        //dd($request->all());
+        $datoError="Error";
         try {
             $validator = Validator::make($request->all(), [
-            'id_tipoafiliado' => 'required',
+            // 'id_tipoafiliado' => 'required',
             'matricula' => 'required',
             'nombres' => 'required',
             'apellidoPaterno' => 'required',
@@ -30,11 +32,11 @@ class AfiliadoController extends Controller
             'telefonoDomicilio' => 'required',
             'telefonoCelular' => 'required',
             'fechaRegistro' => 'required',
-            'id_gruposanguineo' => 'required',
+            // 'id_gruposanguineo' => 'required',
             'telefonocontacto' => 'required',
             'detallecontacto' => 'required',
             // 'observaciones' => 'required',
-            'id_estadoAfiliado' => 'required',
+            // 'id_estadoAfiliado' => 'required',
             //'id_afiliado' => 'required',
             // 'fechaAfiliacion' => 'required|date',
             // 'estadoRequisitos' => 'required',
@@ -53,8 +55,8 @@ class AfiliadoController extends Controller
             
             return response()->json($data, 400);
         }
-        $existe = Afiliado::where('DocIdentificacion', $request->DocIdentificacion)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
-        //dd($existe);
+        $existe = Afiliado::where('DocIdentificacion','like', $request->DocIdentificacion)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
+        //dd($request->DocIdentificacion);
         if ($existe) {
             return response()->json(
                 [
@@ -64,7 +66,8 @@ class AfiliadoController extends Controller
                 ],
                 502,
             );
-        } else {
+        } 
+        else {
             $fechaNacimeinto1 = new \DateTime($request->fechaNacimiento);
             $fechaRegistro2 = new \DateTime($request->fechaRegistro);
             $data = Afiliado::create([
@@ -87,13 +90,13 @@ class AfiliadoController extends Controller
                 'domicilio' => $request->domicilio,
                 'telefonoDomicilio' => $request->telefonoDomicilio,
                 'telefonoCelular' => $request->telefonoCeluar,
-                'id_gruposanguineo' => $request->id_gruposanguineo,
+                'id_gruposanguineo' => 9,
                 'alergias' => $request->alergias,
                 'telefonocontacto' => $request->telefonocontacto,
                 'detallecontacto' => $request->detallecontacto,
                 'observaciones' => $request->observaciones,
-                'id_estadoAfiliado' => $request->id_estadoAfiliado,
-                'idUsuario' => $request->idUsuario,
+                'id_estadoAfiliado' => 1,
+                'idUsuario' => 251,
             ]);
 
             if (!$data) {
@@ -101,6 +104,7 @@ class AfiliadoController extends Controller
                     [
                         'success' => false,
                         'message' => 'Fallo al crear Afiliado',
+                        'data' => $data,
                     ],
                     500,
                 );
@@ -126,6 +130,29 @@ class AfiliadoController extends Controller
     public function obtenerAfiliado($id)
     {
         $data = Afiliado::where('id_afiliado', $id)->first();
+        // $data = Afiliado::find($id);
+        // dd($data);
+        if (!$data) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'no se encontro el Afiliado',
+                ],
+                404,
+            );
+        }
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Afiliado encontrado',
+                'data' => $data,
+            ],
+            200,
+        );
+    }
+    public function obtenerAfiliadoPor_Carnet($carnet)
+    {
+        $data = Afiliado::where('DocIdentificacion', 'like',$carnet)->first();
         // $data = Afiliado::find($id);
         // dd($data);
         if (!$data) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Afiliacion\TitularController;
 use App\Http\Controllers\Afiliacion\AfiliadoController;
+use App\Http\Controllers\Afiliacion\MigracionController;
 use App\Http\Controllers\Afiliacion\DepartamentoController;
 use App\Models\Afiliacion\Afiliado;
 use App\Models\Afiliacion\FotoAfiliado;
@@ -37,30 +38,41 @@ class TitularSIGHO2Controller extends Controller
     //
     public function crearTitularConSigho(Request $request)
     {
+        //dd($request->all());    
+        $datoError="Error";
         try {
-            $afiliado = new AfiliadoController();
-        $titular = new TitularController();
+            
+        // dd($request->request);
+        $afiliado = new AfiliadoController();
         $datoAfiliado = $afiliado->crearAfiliado($request);
-        
-        //dd($datoAfiliado);
         // $request['id_afiliado'] = $id_afiliado;
-        // dd($datoAfiliado->original['success']);
+        // dd($datoAfiliado);
         if (!$datoAfiliado->original['success']) {
+            $datoError=$datoAfiliado;
             return response()->json([
                 'error' => 'No se pudo crear el afiliado',
                 'message' => $datoAfiliado->original,
             ], $datoAfiliado->original['status']);
         }
+        // * SE CREO EL AFILIADO Y SE MIGRO A LA TABLA MIGRACION 
+        // $migracion= new MigracionController();
+        
         $id_afiliado = $datoAfiliado->original['data']->id;
+        // $migracion->agregarMigracion($id_afiliado);
         $request['id_afiliado'] = $id_afiliado;
-        $datoTitular = $titular->crearTitular($request, $id_afiliado);
-        // dd($datoTitular->original);
+        $titular = new TitularController();
+        $datoTitular = $titular->crearTitular($request);
+        $migracion = new MigracionController();
+        $datoMigracion = $migracion->agregarMigracion($request);
         $data = [
             'afiliado' => $datoAfiliado->original,
-            'titular' => $datoTitular->original
+            'titular' => $datoTitular->original,
+            'migracion' => $datoMigracion->original
         ];
+        // dd($data);
 
-        if (!$data || !$datoTitular->original['success']) {
+        if (!$datoTitular->original['success']) {
+            $datoError=$datoAfiliado;
             return response()->json([
                 'success' => false,
                 'message' => 'Fallo al crear Titular',
@@ -73,13 +85,16 @@ class TitularSIGHO2Controller extends Controller
             'data' => $data
         ], 201);
         } catch (\Throwable $th) {
-            return response()->json([
+            // dd($th);
+           return response()->json([
                 'success' => false,
-                'message' => 'Error al crear el titular afiliado atravez del sistema SighoV2',
-                'data' => $th
+                'message' => 'Error al crear el titular afiliado a través del sistema SighoV2.
+                 Datos inválidos, por favor revisa los datos ingresados.',
+                'error' => $th->getMessage(), //Mensaje del error
+                'line' => $th->getLine(),     // Línea donde ocurrió el error
+                'file' => $th->getFile(),     // Archivo donde ocurrió el error
+                'data' => $datoError->original
             ], 500);
         }
-
-        
     }
 }
