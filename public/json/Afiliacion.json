@@ -44,6 +44,11 @@
   "observaciones": null,
   "fechaAfiliacion": "2024-07-01",
   "nua":null
+},
+"actualizar_grupo_sanguineo":
+{
+  "DocIdentificacion": "5558988",
+  "id_gruposanguineo": 4
 }
 
 }

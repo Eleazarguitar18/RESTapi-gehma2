@@ -194,4 +194,67 @@ class AfiliadoController extends Controller
             200,
         );
     }
+   public function actualizarGrupoSanguineo(Request $request)
+    {
+        
+        
+        try {
+            // Validar que los campos requeridos estén presentes en la solicitud
+
+            $validator=Validator::make($request->all(),[
+                'DocIdentificacion' => 'required',
+                'id_gruposanguineo' => 'required',
+            ]);
+            if ($validator->fails()) {
+                $data = [
+                    'success' => false,
+                    'message' => 'Error en la validación de los datos',
+                    'errors' => $validator->errors(),
+                    'status' => 400,
+                ];
+                
+                return response()->json($data, 400);
+            }
+            // Verificar si existe un afiliado con la identificación proporcionada
+            $afiliado = Afiliado::where('DocIdentificacion', 'like',$request->DocIdentificacion)->first();
+            if (!$afiliado) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontró el Afiliado',
+                ], 404);
+            }
+
+            // Actualizar el grupo sanguíneo del afiliado
+            $actualizado=Afiliado::where('DocIdentificacion', 'like',$request->DocIdentificacion)->update([
+                'id_gruposanguineo' => $request->id_gruposanguineo,
+            ]);
+            // dd($actualizado);
+            $afiliadoActualizado = Afiliado::where('DocIdentificacion', 'like',$request->DocIdentificacion)->first();
+            if ($actualizado) {
+    
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Grupo sanguíneo actualizado correctamente',
+                    'data'=>$afiliadoActualizado
+                ], 200);
+            }
+            return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Fallo al Actualizar el grupo sanguineo del Afiliado',
+                        'data' => $afiliadoActualizado,
+                    ],
+                    500,
+                );
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el grupo sanguíneo. Datos inválidos, por favor revisa los datos ingresados.',
+                'error' => $th->getMessage(), // Mensaje del error
+                'line' => $th->getLine(),// Línea donde ocurrió el error
+                'file' => $th->getFile(),// Archivo donde ocurrió el error
+            ], 500);
+        }
+    }
+
 }
