@@ -50,14 +50,14 @@ class BeneficiarioSIGHO2Controller extends Controller
         $request['id_afiliado'] = $id_afiliado;
         $beneficiario = new BeneficiarioController();
         $datoBeneficiario = $beneficiario->crearBeneficiario($request);
-        $migracion = new MigracionController();
-        $datoMigracion = $migracion->agregarMigracion($request);
+        // $migracion = new MigracionController();
+        // $datoMigracion = $migracion->agregarMigracion($request);
         // dd($datoBeneficiario);
         
         $data = [
             'afiliado' => $datoAfiliado->original,
             'beneficiario' => $datoBeneficiario->original,
-            'migracion'=> $datoMigracion->original
+            // 'migracion'=> $datoMigracion->original
         ];
         if (!$datoBeneficiario->original['success']) {
             return response()->json([
