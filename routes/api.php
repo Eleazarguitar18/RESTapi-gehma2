@@ -41,6 +41,7 @@ Route::get('/titular/{id}', [TitularController::class, 'obtenerTitular']);
 Route::get('/afiliado', [TitularController::class, 'listarAfiliado']);
 Route::post('/afiliado', [AfiliadoController::class, 'crearAfiliado']);
 Route::get('/afiliado/{id}', [AfiliadoController::class, 'obtenerAfiliado']);
+Route::get('/afiliado/ci/{ci}', [AfiliadoController::class, 'obtenerAfiliadoPor_Carnet']);
 Route::put('/afiliadoGrupoSanguineo', [AfiliadoController::class, 'actualizarGrupoSanguineo']);
 //tipo afiliado
 Route::get('/tipoafiliado', [TipoAfiliadoController::class, 'listar']);
