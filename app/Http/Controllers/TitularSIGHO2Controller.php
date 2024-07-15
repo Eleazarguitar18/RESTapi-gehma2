@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Afiliacion\TitularController;
 use App\Http\Controllers\Afiliacion\AfiliadoController;
+use App\Http\Controllers\Afiliacion\BeneficiarioController;
 use App\Http\Controllers\Afiliacion\MigracionController;
 use App\Http\Controllers\Afiliacion\DepartamentoController;
 use App\Models\Afiliacion\Afiliado;
 use App\Models\Afiliacion\FotoAfiliado;
+use App\Http\Controllers\Afiliacion\CambioBeneficiarioControlller;
+
 /* 
 NUEVA BASE				ANTIGUA BASE
 
@@ -84,6 +87,48 @@ class TitularSIGHO2Controller extends Controller
                     'titular' => $datoTitular->original,
                     'migracion' => $datoMigracion->original
                 ];
+                //! CAMBIO DE BENEFICIARIO A TITULAR
+                $buscaAfiliado = new AfiliadoController();
+                $afiliadoBeneficiario = $buscaAfiliado->obtenerAfiliadoBeneficiario($request->DocIdentificacion);
+                if ($afiliadoBeneficiario->original['success']) {
+                    // dd('3ntr');
+                    // sacar el id titular
+                    // $id_beneficiario = $buscaBeneficiario->buscarBeneficiarioCI($request->DocIdentificacion);
+                    // sacar beneficiario
+
+
+                    //*para agregar en la tabla cambio titular
+                    $cambio_A_titular = new CambioBeneficiarioControlller();
+                    $request['id_titular'] = $datoTitular->original['data']->id_titular;
+                    $request['id_titularB'] = $afiliadoBeneficiario->original['data']->id_titular;
+                    $request['id_afiliado'] = $afiliadoBeneficiario->original['data']->id_afiliado;
+                    $request['id_parentesco'] = $afiliadoBeneficiario->original['data']->id_parentesco;
+                    $request['id_beneficiario'] = $afiliadoBeneficiario->original['data']->id_beneficiario;
+                    // dd(
+                    //     $request['id_titular'],
+                    //     $request['id_afiliado'],
+                    //     $request['id_beneficiario'],
+                    // );
+                    // $request['id_afiliado'] = $afiliado->data['id_afiliado'];
+                    $cambioTitular = $cambio_A_titular->crearCambioBeneficiario($request);
+                    // dd($cambioTitular);
+                    //! para cambiar el estado del titular
+                    $buscaBeneficiario = new BeneficiarioController();
+                    $cambio_estado = $buscaBeneficiario->actualizaEstadoCambio($request);
+
+                    // ir con id titular a actualizar el estado cambio
+                    //cambiar de Titular a Beneficiario
+                    //agregar la tabla cambio_titular
+
+                    //ya no agregar afiliado, solo optener el ID y llevarlo a beneficiario junto con el id titular
+                    //cambiar id_tipoafiliado a 3, id_parentesco
+                    $data['estado_cambio'] = $cambio_estado->original;
+                    $data['busca Beneficiario'] = $cambioTitular->original;
+                }
+
+
+
+
                 if (!$datoTitular->original['success']) {
                     $datoError = $datoAfiliado;
                     return response()->json([

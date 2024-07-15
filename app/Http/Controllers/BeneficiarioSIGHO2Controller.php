@@ -100,9 +100,9 @@ class BeneficiarioSIGHO2Controller extends Controller
 
                 //ya no agregar afiliado, solo optener el ID y llevarlo a beneficiario junto con el id titular
                 //cambiar id_tipoafiliado a 3, id_parentesco
+                $data['estado_cambio'] = $cambio_estado->original;
+                $data['busca titular'] = $cambioTitular->original;
             }
-            $data['estado_cambio'] = $cambio_estado->original;
-            $data['busca titular'] = $cambioTitular->original;
             if (!$datoBeneficiario->original['success']) {
                 return response()->json([
                     'success' => false,

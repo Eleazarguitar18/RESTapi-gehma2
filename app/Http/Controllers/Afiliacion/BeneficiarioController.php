@@ -103,36 +103,57 @@ class BeneficiarioController extends Controller
             ], 500);
         }
     }
-    public function obtnerBeneficiarioPor_id_Afiliado(Request $request)
+    public function buscarBeneficiarioCI($ci)
     {
-        $existe = Afiliado::where('DocIdentificacion', 'like', $request->DocIdentificacion)->exists();
-        //where('DocIdentificacion', $request->DocIdentificacion)->first();
-
-
+        try {
+            $data = Beneficiario::where('DocIdentificacion', 'like', $ci)->first();
+            // $data = Beneficiario::find($id);
+            // dd($data);
+            if (!$data) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'no se encontro el Beneficiario',
+                    ],
+                    404,
+                );
+            }
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Beneficiario encontrado',
+                    'data' => $data,
+                ],
+                200,
+            );
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
     public function actualizaEstadoCambio(Request $request)
     {
         try {
             // Verificar si existe un afiliado con la identificación proporcionada
-            $Beneficiario = Beneficiario::where('DocIdentificacion', 'like', $request->DocIdentificacion)->first();
-            if (!$Beneficiario) {
+            $afiliado = Afiliado::where('DocIdentificacion', 'like', $request->DocIdentificacion)->first();
+            // dd($afiliado['id_afiliado']);
+            if (!$afiliado) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se encontró el Beneficiario',
+                    'message' => 'No se encontró el Afiliado',
                 ], 404);
             }
-
-            // Actualizar el grupo sanguíneo del Beneficiario
-            $actualizado = Beneficiario::where('DocIdentificacion', 'like', $request->DocIdentificacion)->update([
+            // dd($afiliado);
+            // Actualizar el grupo sanguíneo del afiliado
+            $actualizado = Beneficiario::where('id_afiliado', '=', $afiliado->id_afiliado)->update([
                 'estado_cambio' => 1,
             ]);
             // dd($actualizado);
-            $BeneficiarioActualizado = Beneficiario::where('DocIdentificacion', 'like', $request->DocIdentificacion)->first();
+            $BeneficiarioActualizado = Beneficiario::where('id_afiliado', '=', $afiliado->id_afiliado)->first();
             if ($actualizado) {
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Estado cambio actualizado correctamente',
+                    'message' => 'estado cambio actualizado correctamente',
                     'data' => $BeneficiarioActualizado
                 ], 200);
             }
@@ -147,7 +168,7 @@ class BeneficiarioController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar el grupo sanguíneo. Datos inválidos, por favor revisa los datos ingresados.',
+                'message' => 'Error al actualizar el estado cambio de titular',
                 'error' => $th->getMessage(), // Mensaje del error
                 'line' => $th->getLine(), // Línea donde ocurrió el error
                 'file' => $th->getFile(), // Archivo donde ocurrió el error

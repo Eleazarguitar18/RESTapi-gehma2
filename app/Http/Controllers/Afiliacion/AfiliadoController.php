@@ -239,6 +239,31 @@ class AfiliadoController extends Controller
             200,
         );
     }
+    public function obtenerAfiliadoBeneficiario($carnet)
+    {
+        $data1 = Afiliado::where('DocIdentificacion', 'like', $carnet)->first();
+        // dd($data1['id_afiliado']);
+        $data = Beneficiario::where('id_afiliado', '=', $data1->id_afiliado)->first();
+        // dd($data['id_titular']);
+        // $data = Afiliado::find($id);
+        if (!$data) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'no se encontro el Afiliado Beneficiario',
+                ],
+                404,
+            );
+        }
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Afiliado Beneficiario encontrado',
+                'data' => $data,
+            ],
+            200,
+        );
+    }
     public function listarAfiliado(Request $request)
     {
         $data = Afiliado::all();
