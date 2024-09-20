@@ -86,7 +86,7 @@ class AfiliadoController extends Controller
                     'telefonocontacto' => $request->telefonocontacto,
                     'detallecontacto' => $request->detallecontacto,
                     'observaciones' => $request->observaciones,
-                    'id_estadoAfiliado' => 1,
+                    'id_estadoAfiliado' => 2,
                     'idUsuario' => 251,
                 ]);
                 $actualizado = Afiliado::where('DocIdentificacion', 'like', $request->DocIdentificacion)->first(); //where('DocIdentificacion', $request->DocIdentificacion)->first();
